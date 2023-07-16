@@ -33,8 +33,8 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
     override val agentClass = PersonAgent::class.java
     override val partitions = context.partitions
 
-    val options = com.vaticle.typedb.client.api.TypeDBOptions.core().parallel(false);
-
+        val options = com.vaticle.typedb.client.api.TypeDBOptions.core().parallel(false);
+//    val options = com.vaticle.typedb.client.api.TypeDBOptions.cluster().parallel(false);
     val timeZero: LocalDateTime = LocalDateTime.now().withNano(0);
 
     private fun nameFrom(partitionId: Int, id: Int): String {
@@ -170,6 +170,29 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
         return listOf()
     }
 
+    fun deleteAllPersons(
+        session: TypeDBSession,
+        dbPartition: Context.DBPartition,
+        randomSource: RandomSource
+    ): List<Agent.Report> {
+        session.transaction(TypeDBTransaction.Type.WRITE, options).use { tx ->
+            val id: Int = 1 + randomSource.nextInt(dbPartition.idCtr.get())
+            tx.query().delete(
+                TypeQL.match(
+                    TypeQL.cVar("p1").isa("person")
+                        .has("name", TypeQL.cVar("name"))
+                        .has("address", TypeQL.cVar("addr")),
+                ).delete(
+                    TypeQL.cVar("p1").isa("person"),
+                    TypeQL.cVar("name").isa("name"),
+                    TypeQL.cVar("addr").isa("address"),
+                    )
+            )
+            tx.commit();
+        }
+        return listOf()
+    }
+
     override val actionHandlers = mapOf(
         "createPerson" to ::createPerson,
         "createFriendship" to ::createFriendship,
@@ -177,5 +200,6 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
         "readFriendsOf" to ::readFriendsOf,
         "readFriendsOfFriends" to ::readFriendsOfFriends,
         "readPersonsByPostCode" to ::readPersonsByPostCode,
+        "deleteAllPersons" to ::deleteAllPersons,
     )
 }

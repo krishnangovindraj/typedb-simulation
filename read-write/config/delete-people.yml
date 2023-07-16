@@ -15,30 +15,31 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+agents:
+  - name: "PersonAgent"
+    action: "createPerson"
+    runsPerIteration: 100
+    trace: false
 
-package(default_visibility = ["//read-write:__pkg__"])
+  - name: "PersonAgent"
+    action: "deleteAllPersons"
+    runsPerIteration: 1
+    trace: false
 
-filegroup(
-    name = "logback-config",
-    srcs = [
-        "logback.xml",
-    ],
-)
+traceSampling:
+  # Options: `"every"` for every K traces; `"log"` for logarithm with base N
+  function: "every"
+  arg: 10
 
-filegroup(
-    name = "benchmark-config",
-    srcs = [
-        "ci-tests.yml",
-        "large-data-benchmark.yml",
-        "read-write-benchmark.yml",
-        "write-benchmark.yml",
-        "delete-people.yml"
-    ],
-)
+run:
+  randomSeed: 1
+  iterations: 50
+  partitions: 16
+  databaseName: "benchmark-deletes"
+  recreateDatabase: true
+  parallelism: 16
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "agpl-header",
-)
+model:
+  personsCreatedPerRun: 100
+  friendshipsCreatedPerRun: 0
+  postCodes: 997
