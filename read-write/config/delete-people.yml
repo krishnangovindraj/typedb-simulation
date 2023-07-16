@@ -18,7 +18,7 @@
 agents:
   - name: "PersonAgent"
     action: "createPerson"
-    runsPerIteration: 100
+    runsPerIteration: 500
     trace: false
 
   - name: "PersonAgent"
@@ -34,12 +34,12 @@ traceSampling:
 run:
   randomSeed: 1
   iterations: 50
-  partitions: 16
+  partitions: 1
   databaseName: "benchmark-deletes"
   recreateDatabase: true
-  parallelism: 16
+  parallelism: 1
 
 model:
-  personsCreatedPerRun: 100
+  personsCreatedPerRun: 5
   friendshipsCreatedPerRun: 0
   postCodes: 997
