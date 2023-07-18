@@ -18,7 +18,7 @@
 agents:
   - name: "PersonAgent"
     action: "createPerson"
-    runsPerIteration: 100
+    runsPerIteration: 1000
     trace: false
 
   - name: "PersonAgent"
@@ -40,6 +40,6 @@ run:
   parallelism: 1
 
 model:
-  personsCreatedPerRun: 5
+  personsCreatedPerRun: 10
   friendshipsCreatedPerRun: 0
   postCodes: 97
