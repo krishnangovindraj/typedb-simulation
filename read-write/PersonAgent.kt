@@ -33,7 +33,8 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
     override val agentClass = PersonAgent::class.java
     override val partitions = context.partitions
 
-    val options = com.vaticle.typedb.client.api.TypeDBOptions.core().parallel(false);
+//    val options = com.vaticle.typedb.client.api.TypeDBOptions.core().parallel(false);
+    val options = com.vaticle.typedb.client.api.TypeDBOptions.cluster().parallel(false);
 
     val timeZero: LocalDateTime = LocalDateTime.now().withNano(0);
 

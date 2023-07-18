@@ -56,6 +56,6 @@ run:
   parallelism: 16
 
 model:
-  personsCreatedPerRun: 100
-  friendshipsCreatedPerRun: 500
+  personsCreatedPerRun: 500
+  friendshipsCreatedPerRun: 2500
   postCodes: 97
