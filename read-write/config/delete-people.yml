@@ -18,12 +18,12 @@
 agents:
   - name: "PersonAgent"
     action: "createPerson"
-    runsPerIteration: 500
+    runsPerIteration: 100
     trace: false
 
   - name: "PersonAgent"
     action: "deleteAllPersons"
-    runsPerIteration: 1
+    runsPerIteration: 97
     trace: false
 
 traceSampling:
@@ -42,4 +42,4 @@ run:
 model:
   personsCreatedPerRun: 5
   friendshipsCreatedPerRun: 0
-  postCodes: 997
+  postCodes: 97

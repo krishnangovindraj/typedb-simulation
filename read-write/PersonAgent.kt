@@ -36,6 +36,7 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
         val options = com.vaticle.typedb.client.api.TypeDBOptions.core().parallel(false);
 //    val options = com.vaticle.typedb.client.api.TypeDBOptions.cluster().parallel(false);
     val timeZero: LocalDateTime = LocalDateTime.now().withNano(0);
+    var deleteId: Int = 1;
 
     private fun nameFrom(partitionId: Int, id: Int): String {
         return Objects.hash("name", partitionId, id).toString() + "-" + partitionId + ":" + id
@@ -69,6 +70,7 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
             tx.query().insert(TypeQL.insert(inserts))
             tx.commit()
         }
+        deleteId = context.model.nPostCodes;
         return listOf()
     }
 
@@ -175,13 +177,15 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
         dbPartition: Context.DBPartition,
         randomSource: RandomSource
     ): List<Agent.Report> {
+        deleteId = deleteId - 1;
         session.transaction(TypeDBTransaction.Type.WRITE, options).use { tx ->
             val id: Int = 1 + randomSource.nextInt(dbPartition.idCtr.get())
             tx.query().delete(
                 TypeQL.match(
                     TypeQL.cVar("p1").isa("person")
                         .has("name", TypeQL.cVar("name"))
-                        .has("address", TypeQL.cVar("addr")),
+                        .has("address", TypeQL.cVar("addr"))
+                        .has("post-code", deleteId),
                 ).delete(
                     TypeQL.cVar("p1").isa("person"),
                     TypeQL.cVar("name").isa("name"),
