@@ -179,14 +179,10 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
             val id: Int = 1 + randomSource.nextInt(dbPartition.idCtr.get())
             tx.query().delete(
                 TypeQL.match(
-                    TypeQL.cVar("p1").isa("person")
-                        .has("name", TypeQL.cVar("name"))
-                        .has("address", TypeQL.cVar("addr")),
+                    TypeQL.cVar("t").isa("thing"),
                 ).delete(
-                    TypeQL.cVar("p1").isa("person"),
-                    TypeQL.cVar("name").isa("name"),
-                    TypeQL.cVar("addr").isa("address"),
-                    )
+                    TypeQL.cVar("t").isa("thing"),
+                )
             )
             tx.commit();
         }
