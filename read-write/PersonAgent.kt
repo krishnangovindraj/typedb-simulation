@@ -179,17 +179,18 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
     ): List<Agent.Report> {
         deleteId = (deleteId + 1) % context.model.nPostCodes;
         session.transaction(TypeDBTransaction.Type.WRITE, options).use { tx ->
-            val id: Int = 1 + randomSource.nextInt(dbPartition.idCtr.get())
             tx.query().delete(
                 TypeQL.match(
                     TypeQL.cVar("p1").isa("person")
                         .has("name", TypeQL.cVar("name"))
                         .has("address", TypeQL.cVar("addr"))
                         .has("post-code", deleteId.toLong()),
+                    TypeQL.cVar("f").rel(TypeQL.cVar("p1")).isa("friendship")
                 ).delete(
                     TypeQL.cVar("p1").isa("person"),
                     TypeQL.cVar("name").isa("name"),
                     TypeQL.cVar("addr").isa("address"),
+                    TypeQL.cVar("f").isa("friendship"),
                     )
             )
             tx.commit();
