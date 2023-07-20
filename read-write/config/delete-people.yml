@@ -21,6 +21,7 @@ agents:
     runsPerIteration: 100
     trace: false
 
+  FRIENDSHIPS ARENT MEANT TO WORK WITH DELETION!
   - name: "PersonAgent"
     action: "createFriendship"
     runsPerIteration: 100
