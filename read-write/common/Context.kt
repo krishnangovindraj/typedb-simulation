@@ -38,6 +38,7 @@ class Context private constructor(config: Config, isTracing: Boolean, isReportin
     ) : Partition {
 
         val idCtr : AtomicInteger = AtomicInteger()
+        val deleteIdCtr : AtomicInteger = AtomicInteger()
         override val code: String
             get() = "code-" + partitionId
         override val group: String

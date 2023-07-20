@@ -21,7 +21,6 @@ agents:
     runsPerIteration: 100
     trace: false
 
-  FRIENDSHIPS ARENT MEANT TO WORK WITH DELETION!
   - name: "PersonAgent"
     action: "createFriendship"
     runsPerIteration: 100
@@ -39,7 +38,7 @@ traceSampling:
 
 run:
   randomSeed: 1
-  iterations: 50
+  iterations: 10
   partitions: 1
   databaseName: "benchmark-deletes"
   recreateDatabase: true

@@ -81,8 +81,8 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
     ): List<Agent.Report> {
         session.transaction(TypeDBTransaction.Type.WRITE, options).use { tx ->
             for (i in 1..context.model.friendshipPerBatch) {
-                val first: Int = 1 + randomSource.nextInt(dbPartition.idCtr.get())
-                val second: Int = 1 + randomSource.nextInt(dbPartition.idCtr.get())
+                val first: Int = 1 + dbPartition.deleteIdCtr.get() + randomSource.nextInt(dbPartition.idCtr.get() - dbPartition.deleteIdCtr.get())
+                val second: Int = 1 + dbPartition.deleteIdCtr.get() + randomSource.nextInt(dbPartition.idCtr.get() - dbPartition.deleteIdCtr.get())
                 tx.query().insert(
                     TypeQL.match(
                         TypeQL.cVar("p1").isa("person").has("name", nameFrom(dbPartition.partitionId, first)),
@@ -178,6 +178,7 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
         randomSource: RandomSource
     ): List<Agent.Report> {
         deleteId = (deleteId + 1) % context.model.nPostCodes;
+        Thread.sleep(5)
         session.transaction(TypeDBTransaction.Type.WRITE, options).use { tx ->
             tx.query().delete(
                 TypeQL.match(
@@ -195,6 +196,7 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
             )
             tx.commit();
         }
+        dbPartition.deleteIdCtr.setPlain(dbPartition.idCtr.get());
         return listOf()
     }
 
