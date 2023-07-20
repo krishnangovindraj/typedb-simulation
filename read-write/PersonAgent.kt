@@ -187,11 +187,13 @@ public class PersonAgent(client: TypeDBClient, context: Context) :
                         .has("address", TypeQL.cVar("addr"))
                         .has("post-code", deleteId.toLong()),
                     TypeQL.cVar("f").rel(TypeQL.cVar("p1")).isa("friendship")
+                        .has("meeting-time", TypeQL.cVar("mt"))
                 ).delete(
                     TypeQL.cVar("p1").isa("person"),
                     TypeQL.cVar("name").isa("name"),
                     TypeQL.cVar("addr").isa("address"),
                     TypeQL.cVar("f").isa("friendship"),
+                    TypeQL.cVar("mt").isa("meeting-time")
                     )
             )
             tx.commit();
